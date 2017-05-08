@@ -1,0 +1,14 @@
+#not in use
+# ######### dropin ui example
+<form id="checkout" method="post" action="/payment/checkout">
+  <div id="payment-form"></div>
+  <input type="submit" value="Pay $10">
+</form>
+<script src="https://js.braintreegateway.com/js/braintree-2.31.0.min.js"></script>
+
+<script type="text/javascript">
+	var client_token  = "<%= @token %>"
+	braintree.setup(client_token, "dropin", {
+  container: "payment-form"
+});
+</script>

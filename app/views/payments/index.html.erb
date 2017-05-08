@@ -1,0 +1,45 @@
+
+<input type="submit" value="Pay $10" id="my-button-element">
+
+
+
+<script src="https://js.braintreegateway.com/js/braintree-2.15.2.min.js"></script>
+
+<script type="text/javascript">
+  var client_token  = "<%= @token %>"
+	var checkout;
+
+braintree.setup(client_token, "custom", {
+  onReady: function (integration) {
+    checkout = integration;
+  },
+  onPaymentMethodReceived: function (payload) {
+   var nonce = payload.nonce;
+   /* after getting payment method , or payment authentication send ajax request to server for braintree payment approval.*/
+      $.ajax({                     
+      url: "/payment/checkout",
+      type: "GET",
+      data : {
+        payment_method_nonce: nonce
+      },
+      dataType: "script",
+    });
+
+  },
+  paypal: {
+    singleUse: true,
+    amount: 11.00,
+    currency: 'USD',
+    locale: 'en_us',
+    enableShippingAddress: 'true',
+    headless: true
+  }
+});
+
+// Adds click event listener to your own PayPal button of choice
+$('#my-button-element').on('click', function(e){
+  e.preventDefault();
+	checkout.paypal.initAuthFlow();
+	return false;
+});
+</script>
